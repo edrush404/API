@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista telefonica</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
+
+</head>
+<body>
+    <header>
+        <div class="login">
+             <h1>Bem vindo!</h1>
+             <input type="text" placeholder="Login">
+             <input type="password" placeholder="Senha">
+             <input type="button" value="Entrar" class="entrar">
+             <a href="#">Esqueceu a senha?</a><div id="buttonDiv"></div> 
+         </div>
+         <div>
+             <p id="nome"></p>
+             <p id="email"></p>
+             <p id="sub"></p>
+             <img id="imagem"/>
+         </div>
+    </header>
+    <script>
+        function handleCredentialResponse(response) {
+          // console.log("Encoded JWT ID token: " + response.credential);
+          const data = jwt_decode(response.credential);
+          // console.log(data);
+          // console.log(data['email']);
+          // console.log(data['name']);
+
+          nome.textContent =  data.name;
+          email.textContent = data.email;
+          sub.textContent = data.sub;
+          imagem.setAttribute("src",data.picture);
+
+        }
+        window.onload = function () {
+          google.accounts.id.initialize({
+            client_id: "797929688643-ktvkqusif4jj7pmldbel2ktte9e7pra7.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+          });
+          google.accounts.id.renderButton(
+            document.getElementById("buttonDiv"),
+            { theme: "outline", size: "large" }  // customization attributes
+          );
+          google.accounts.id.prompt(); // also display the One Tap dialog
+        }
+    </script>
+</body>
+</html>
